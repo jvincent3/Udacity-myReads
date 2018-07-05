@@ -1,26 +1,48 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import * as BooksAPI from './BooksAPI'
 import escapedRegExp from 'escape-string-regexp';
 import sortBy from 'sort-by';
 
 class SearchBook extends Component {
     state = {
-        query: ''
+        query: '',
+        searchedBooks: [],
+        searched: [],
+        val: ''
     }
 
     updateQuery = ( query ) => {
-        this.setState({ query: query.trim() })
+        this.setState({ query: query.trim() });
+    }
+
+    updateShelf = (book, event) => {
+      BooksAPI.update(book, event.target.value);
+      this.setState({
+        val: event.target.value
+      })
+    }
+
+      updateBookshelf = (book) => {
+        this.setState({ searchedBooks: book })
+      }
+
+    searchBook = (query) => {
+        BooksAPI.search(query).then((searched) => {
+        if (this.state.query.length === 1) {
+          this.setState({ searched });
+        }  
+    });
     }
 
     render() {
         let showingBooks;
         if (this.state.query) {
             const match = new RegExp(escapedRegExp(this.state.query), 'i');
-            showingBooks = this.props.books.filter((book) => match.test(book.title));
+            showingBooks = this.state.searched.filter((book) => match.test(book.title));
         } else {
-            showingBooks = this.props.books;
+            showingBooks = this.state.searched;
         }
-
         showingBooks.sort(sortBy('title'));
 
         return (
@@ -39,7 +61,9 @@ class SearchBook extends Component {
                 <input type="text"
                 placeholder="Search by title or author"
                 value={this.state.query}
-                onChange={(event) => this.updateQuery(event.target.value)}
+                onChange={(event) => {this.updateQuery(event.target.value)
+                  this.searchBook(event.target.value)
+                }}
               />
 
               </div>
@@ -54,7 +78,7 @@ class SearchBook extends Component {
                             backgroundImage: `url(${book.imageLinks.smallThumbnail})`
                             }}/>
                             <div className="book-shelf-changer">
-                              <select>
+                              <select onChange={(event) => this.props.onUpdateBook(book, event)}>
                                 <option value="move" disabled>Move to...</option>
                                 <option value="currentlyReading">Currently Reading</option>
                                 <option value="wantToRead">Want to Read</option>
