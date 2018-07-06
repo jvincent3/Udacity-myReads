@@ -18,19 +18,30 @@ class BooksApp extends React.Component {
   }
 
   updateBook = (book, event) => {
+    const { books } = this.state
     const eTarget = event.target.value;
-    this.setState((state) => ({
-      books: state.books.map((b) => {
-        
-          if (b.id === book.id ) {
-            b.shelf = eTarget;
-            return b;
-          }
-            return b;
-        })
-    }))
+    const bookIndex = this.state.books.findIndex((b) => {
+      return b.id === book.id;
+    });
+    if (bookIndex === -1) {
+        book.shelf = eTarget;
+        books.push(book);
+    } else {
+      books.map((b) => {
 
-     BooksAPI.update(book, eTarget);
+            if (b.id === book.id ) {
+              b.shelf = eTarget;
+              return b;
+            }
+              return b;
+      });
+
+    }
+
+     BooksAPI.update(book, eTarget).then(
+      this.setState({
+        books: books
+      }));
   }
 
   render() {
