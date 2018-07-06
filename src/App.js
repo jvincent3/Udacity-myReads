@@ -57,8 +57,8 @@ class BooksApp extends React.Component {
           <div className="list-books">
             <ListBookTitle/>
             <ListBookContent
-            onUpdateBook={this.updateBook}
-            books={this.state.books}/>
+            books={this.state.books}
+            onUpdateBook={this.updateBook}/>
             <SearchButton/>
           </div>
 
