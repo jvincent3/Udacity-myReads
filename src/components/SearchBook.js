@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from '../BooksAPI'
 import escapedRegExp from 'escape-string-regexp';
 import sortBy from 'sort-by';
 
