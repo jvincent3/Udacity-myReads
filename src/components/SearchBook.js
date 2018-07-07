@@ -11,20 +11,20 @@ class SearchBook extends Component {
         books: [],
     }
 
-    searchBook = (query) => {
+    searchBook = query => {
         this.setState({ query: query.trim() });
-        if (query.length !== 0) {
+        if (query.length) {
             BooksAPI.search(query).then((searched) => {
-              if ( searched && searched.length && query.length === 1) {
-                const books = searched.map((book) => {
-                  const library = this.props.books.find((library) => library.id === book.id);
+              if ( searched && searched.length && query.length) {
+                const books = searched.map(({id, authors, title, imageLinks}) => {
+                  const library = this.props.books.find((library) => library.id === id);
                   const shelf = library ? library.shelf : 'none';
                           return {
-                              id: book.id,
-                              shelf: shelf,
-                              author: book.authors !== undefined ? book.authors : 'Author not found',
-                              title: book.title !== undefined ? book.title : 'Title not found',
-                              image: book.imageLinks !== undefined  ? book.imageLinks.thumbnail : 'http://via.placeholder.com/128x193?text=No%20Image%20found'
+                              id,
+                              shelf,
+                              author: authors ? authors : 'Author not found',
+                              title: title ? title : 'Title not found',
+                              image: imageLinks ? imageLinks.thumbnail : 'http://via.placeholder.com/128x193?text=No%20Image%20found'
 
                           };
                       });
