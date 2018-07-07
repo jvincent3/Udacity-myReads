@@ -14,7 +14,10 @@ class BookShelf extends Component {
                     	<li key={book.id}>
                     	<Book book={book}
                     		  onUpdateBook={this.props.onUpdateBook}
-                    		  option={this.props.option}
+                              option={book.shelf}
+                              title={book.title}
+                              author={book.author}
+                              image={book.imageLinks.thumbnail}
                     		  />
                     	</li>
                     ))}
