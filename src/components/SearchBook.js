@@ -15,7 +15,7 @@ class SearchBook extends Component {
         this.setState({ query: query.trim() });
         if (query.length) {
             BooksAPI.search(query).then((searched) => {
-              if ( searched && searched.length && query.length) {
+              if ( searched && searched.length) {
                 const books = searched.map(({id, authors, title, imageLinks}) => {
                   const library = this.props.books.find((library) => library.id === id);
                   const shelf = library ? library.shelf : 'none';
@@ -31,6 +31,8 @@ class SearchBook extends Component {
                 this.setState({ books });
               }
             });
+      } else {
+        this.setState({ books: []});
       }
     }
 
@@ -38,7 +40,7 @@ class SearchBook extends Component {
         let showingBooks;
         if (this.state.query) {
             const match = new RegExp(escapedRegExp(this.state.query), 'i');
-            showingBooks = this.state.books.filter((book) => match.test(book.title));
+            showingBooks = this.state.books.filter((book) => match.test(book.title.replace(/ /g,'')));
         } else {
             showingBooks = this.state.books;
         }
