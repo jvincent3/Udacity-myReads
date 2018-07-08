@@ -12,7 +12,7 @@ class SearchBook extends Component {
     }
 
     searchBook = query => {
-        this.setState({ query: query.trim() });
+        this.setState({ query: query });
         if (query.length) {
             BooksAPI.search(query).then((searched) => {
               if ( searched && searched.length) {
@@ -38,11 +38,12 @@ class SearchBook extends Component {
 
     render() {
         let showingBooks;
-        if (this.state.query) {
-            const match = new RegExp(escapedRegExp(this.state.query), 'i');
-            showingBooks = this.state.books.filter((book) => match.test(book.title.replace(/ /g,'')));
+        const {books, query} = this.state
+        if (query) {
+            const match = new RegExp(escapedRegExp(query), 'i');
+            showingBooks = books.filter((book) => match.test(book.title.replace(/ /g,'')));
         } else {
-            showingBooks = this.state.books;
+            showingBooks = books;
         }
         showingBooks.sort(sortBy('title'));
 
